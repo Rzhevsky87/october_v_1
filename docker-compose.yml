@@ -1,0 +1,33 @@
+version: '2.2'
+services:
+    web:
+        container_name: oct_web
+        restart: on-failure
+        image: aspendigital/octobercms:latest
+        ports:
+            - 85:80
+        environment:
+            - DB_TYPE=mysql
+            - DB_HOST=db #DB_HOST should match the service name of the database container
+            - DB_DATABASE=octobercms
+            - DB_USERNAME=octobercms
+            - DB_PASSWORD=octobercms
+        volumes:
+            - ./plugins:/var/www/html/plugins
+            - ./storage/app:/var/www/html/storage/app
+            - ./storage/logs:/var/www/html/storage/logs
+            - ./themes:/var/www/html/themes
+
+    db:
+        image: mariadb
+        ports:
+            - 3310:3306
+        container_name: oct_db
+        restart: on-failure
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: 1
+            MYSQL_DATABASE: octobercms
+            MYSQL_USER: octobercms
+            MYSQL_PASSWORD: octobercms
+        volumes:
+            - ./volumes/mysql/data:/var/lib/mysql
